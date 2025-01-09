@@ -6,11 +6,7 @@ from st_pages import add_page_title, get_nav_from_toml
 
 hide_streamlit_style = """
             <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
             div.stHeading {display: none;}
-            .css-18e3th9 {padding-top: 0rem;}
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
