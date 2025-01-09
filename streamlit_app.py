@@ -10,7 +10,6 @@ st.set_page_config(
 )
 
 # -----------------------------------------------------------------------------
-# Declare some useful functions.
 
 @st.cache_data
 def get_gdp_data():
@@ -63,13 +62,16 @@ gdp_df = get_gdp_data()
 # Draw the actual page
 
 # Set the title that appears at the top of the page.
-'''
-# :earth_americas: Terror Attacks Visualization Project
+st.markdown(
+    '''
+    # :boom: Terror Attacks Visualization Project
+    <div style="text-align: right; direction: rtl;">
 
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
+    בחרנו לעבד, לנתח ולהציג נתונים אודות אירועי טרור בישראל לאורך השנים, מתוך מאגר הנתונים Global Terrorism Database (GTD).
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
 
 # Add some spacing
 ''
