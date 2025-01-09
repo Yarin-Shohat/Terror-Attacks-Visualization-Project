@@ -1,0 +1,29 @@
+[[pages]]
+path = "homePage.py"
+name = "Home Page"
+icon = "🏠"
+
+[[pages]]
+path = "pages/task1.py"
+name = "Task 1"
+icon = ":boom:"
+url_path = "task1"
+
+[[pages]]
+path = "pages/task2.py"
+name = "Task 2"
+icon = ":boom:"
+url_path = "task2"
+
+[[pages]]
+path = "pages/task3.py"
+name = "Task 3"
+icon = ":boom:"
+url_path = "task3"
+
+
+[[pages]]
+path = "test.py"
+name = "test"
+icon = ":boom:"
+url_path = "test"
