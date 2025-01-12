@@ -3,6 +3,9 @@ import pandas as pd
 import math
 from pathlib import Path
 from st_pages import add_page_title, get_nav_from_toml
+from ydata_profiling import ProfileReport
+from streamlit_ydata_profiling import st_profile_report
+
 
 hide_streamlit_style = """
             <style>
@@ -64,5 +67,20 @@ st.markdown(
 ''
 ''
 
+
 df = get_data()
+st.write(df)
+
+@st.cache_data
+def generate_profile_report(df):
+    return ProfileReport(df, title="Terror Attacks Dataset Analysis")
+
+df = get_data()
+
+# Generate and display profile report
+with st.expander("Data Profile Report", expanded=False):
+    profile_report = generate_profile_report(df)
+    st_profile_report(profile_report)
+
+# Display raw data
 st.write(df)

@@ -3,8 +3,9 @@ import pandas as pd
 import math
 from pathlib import Path
 from st_pages import add_page_title, get_nav_from_toml
+import numpy
 
-
+st.write(numpy.__version__)
 @st.cache_data
 def get_gdp_data():
     """Grab GDP data from a CSV file.
