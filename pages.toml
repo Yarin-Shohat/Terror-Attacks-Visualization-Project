@@ -27,3 +27,9 @@ path = "test.py"
 name = "test"
 icon = ":boom:"
 url_path = "test"
+
+[[pages]]
+path = "test1.py"
+name = "test1"
+icon = ":boom:"
+url_path = "test1"

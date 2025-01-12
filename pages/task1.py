@@ -1,31 +1,106 @@
 import streamlit as st
-import time
-import numpy as np
+import pandas as pd
+from folium.plugins import MarkerCluster
+import folium
+from pathlib import Path
 
-st.markdown("# Plotting Demo")
-st.sidebar.header("Plotting Demo")
-st.write(
-    """This demo illustrates a combination of plotting and animation with
-Streamlit. We're generating a bunch of random numbers in a loop for around
-5 seconds. Enjoy!"""
+
+# -----------------------------------------------------------------------------
+
+st.markdown(
+    '''
+    <div style="text-align: right; direction: rtl;font-size: large;">
+    בעמוד זה נענה על המטלה הבאה:
+    <br>
+    <b>התפלגות תקיפות הטרור לפי אזורים: כמות אירועי הטרור לפי מיקומים שונים בישראל</b>
+    </div>
+    ''',
+    unsafe_allow_html=True
 )
 
-progress_bar = st.sidebar.progress(0)
-status_text = st.sidebar.empty()
-last_rows = np.random.randn(1, 1)
-chart = st.line_chart(last_rows)
+@st.cache_data
+def get_data():
+    """
+    Read the Terror Attacks data from the CSV file.
+    """
+    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
+    DATA_FILENAME = Path(__file__).parent.parent / 'data/IL_data.csv'
+    df = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
+    columns_names = ["eventid","iyear","imonth","iday","country","city","latitude","longitude","nperps","nkill","nwound",
+        "location","success","attacktype1","suicide","targtype1","weaptype1_txt","gname","extended"]
 
-for i in range(1, 101):
-    new_rows = last_rows[-1, :] + np.random.randn(5, 1).cumsum(axis=0)
-    status_text.text("%i%% Complete" % i)
-    chart.add_rows(new_rows)
-    progress_bar.progress(i)
-    last_rows = new_rows
-    time.sleep(0.05)
+    df = df[df["latitude"].notna() & df["longitude"].notna()]
 
-progress_bar.empty()
+    df = df[columns_names]
 
-# Streamlit widgets automatically run the script from top to bottom. Since
-# this button is not connected to any other logic, it just causes a plain
-# rerun.
-st.button("Re-run")
+    return df
+
+
+data = get_data()
+
+# Define a list of specific cities with their latitudes, longitudes, and labels
+city_labels = [{'name': 'Jerusalem', 'lat': 31.772180600401597, 'lon': 35.20426017469879},
+ {'name': 'Tel Aviv', 'lat': 32.082969999999996, 'lon': 34.81188600000001},
+ {'name': 'Ashkelon', 'lat': 31.665745571428566, 'lon': 34.57345348214286},
+ {'name': 'Sderot', 'lat': 31.528199999999995, 'lon': 34.596382000000006},
+ {'name': 'Eshkol regional council',
+  'lat': 31.213881746268658,
+  'lon': 34.460347388059695},
+ {'name': 'Ashdod', 'lat': 31.819970431372543, 'lon': 34.66481956862746},
+ {'name': 'Beersheba', 'lat': 31.258944624999998, 'lon': 34.786781},
+ {'name': 'Haifa', 'lat': 32.79357451219513, 'lon': 34.990603195121956},
+ {'name': 'Shaar HaNegev regional council',
+  'lat': 31.51099376923077,
+  'lon': 34.62375746153846},
+ {'name': 'Petah Tiqwa', 'lat': 32.089161, 'lon': 34.88382},
+ {'name': 'Netanya', 'lat': 32.32518116, 'lon': 34.85378992},
+ {'name': 'Sdot Negev regional council',
+  'lat': 31.41276371428572,
+  'lon': 34.580247190476186},
+ {'name': 'Kissufim', 'lat': 31.373840000000005, 'lon': 34.39836371428571}]
+# Create a base map centered on Israel
+label_map = folium.Map(
+    location=[31.5, 34.8],  # Center of Israel
+    zoom_start=8,           # Appropriate zoom level for full coverage
+    tiles="CartoDB positron",
+    control_scale=True
+)
+
+# Add a Marker Cluster for ALL points
+marker_cluster = MarkerCluster(
+    options={
+        'spiderfyOnMaxZoom': True,
+        'disableClusteringAtZoom': 11,
+        'maxClusterRadius': 40,
+        'showCoverageOnHover': True
+    }
+).add_to(label_map)
+
+# Add ALL points to the cluster
+for idx, row in data.iterrows():
+    folium.CircleMarker(
+        location=[row['latitude'], row['longitude']],
+        radius=6,
+        color='blue',
+        fill=True,
+        fill_color='blue',
+        fill_opacity=0.7,
+        popup=(
+            f"<b>City:</b> {row['city']}<br>"
+            f"<b>Casualties:</b> {row['nkill'] + row['nwound']}<br>"
+            f"<b>Location:</b> {row['location']}"
+        )
+    ).add_to(marker_cluster)
+
+# Add labels for specific cities
+for city in city_labels:
+    folium.Marker(
+        location=[city["lat"], city["lon"]],
+        icon=None,  # No icon, just text
+        popup=city["name"],
+        tooltip=city["name"]
+    ).add_to(label_map)
+
+# Save the map with city labels
+label_map.save("labeled_israel_map.html")
+st.components.v1.html(label_map._repr_html_(), height=700)

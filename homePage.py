@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import math
 from pathlib import Path
 from st_pages import add_page_title, get_nav_from_toml
 from ydata_profiling import ProfileReport
@@ -15,7 +14,6 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# Draw the actual page
 @st.cache_data
 def get_data():
     """
@@ -78,9 +76,6 @@ def generate_profile_report(df):
 df = get_data()
 
 # Generate and display profile report
-with st.expander("Data Profile Report", expanded=False):
+with st.expander("Data Profile Report", expanded=True):
     profile_report = generate_profile_report(df)
     st_profile_report(profile_report)
-
-# Display raw data
-st.write(df)
