@@ -1,54 +1,34 @@
 import streamlit as st
 import pandas as pd
-import altair as alt
-from urllib.error import URLError
+from pathlib import Path
 
-st.markdown("# DataFrame Demo")
-st.sidebar.header("DataFrame Demo")
-st.write(
-    """This demo shows how to use `st.write` to visualize Pandas DataFrames.
-(Data courtesy of the [UN Data Explorer](http://data.un.org/Explorer.aspx).)"""
+
+# -----------------------------------------------------------------------------
+
+st.markdown(
+    '''
+    <div style="text-align: right; direction: rtl;font-size: large;">
+    בעמוד זה נענה על המטלה הבאה:
+    <br>
+    <b>כמות פיגועי הטרור לאורך השנים: כיצד השתנתה תדירות הפיגועים לאורך השנים?</b>
+    </div>
+    ''',
+    unsafe_allow_html=True
 )
 
-
 @st.cache_data
-def get_UN_data():
-    AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
-    df = pd.read_csv(AWS_BUCKET_URL + "/agri.csv.gz")
-    return df.set_index("Region")
-
-
-try:
-    df = get_UN_data()
-    countries = st.multiselect(
-        "Choose countries", list(df.index), ["China", "United States of America"]
-    )
-    if not countries:
-        st.error("Please select at least one country.")
-    else:
-        data = df.loc[countries]
-        data /= 1000000.0
-        st.write("### Gross Agricultural Production ($B)", data.sort_index())
-
-        data = data.T.reset_index()
-        data = pd.melt(data, id_vars=["index"]).rename(
-            columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
-        )
-        chart = (
-            alt.Chart(data)
-            .mark_area(opacity=0.3)
-            .encode(
-                x="year:T",
-                y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
-                color="Region:N",
-            )
-        )
-        st.altair_chart(chart, use_container_width=True)
-except URLError as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-        Connection error: %s
+def get_data():
     """
-        % e.reason
-    )
+    Read the Terror Attacks data from the CSV file.
+    """
+    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
+    DATA_FILENAME = Path(__file__).parent.parent / 'data/IL_data.csv'
+    df = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
+    columns_names = ["eventid","iyear","imonth","iday","country","city","latitude","longitude","nperps","nkill","nwound",
+        "location","success","attacktype1","suicide","targtype1","weaptype1_txt","gname","extended"]
+
+    df = df[columns_names]
+
+    return df
+
+df = get_data()

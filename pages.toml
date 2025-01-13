@@ -46,9 +46,14 @@ name = "test1"
 icon = ":boom:"
 url_path = "test1"
 
-
 [[pages]]
 path = "test2.py"
 name = "test2"
 icon = ":boom:"
 url_path = "test2"
+
+[[pages]]
+path = "test3.py"
+name = "test3"
+icon = ":boom:"
+url_path = "test3"
