@@ -6,3 +6,4 @@ numba
 ydata-profiling
 streamlit-ydata-profiling
 folium
+plotly
