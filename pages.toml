@@ -21,6 +21,11 @@ name = "Task 2 V2"
 icon = ":boom:"
 url_path = "task2V2"
 
+[[pages]]
+path = "pages/task2V3.py"
+name = "Task 2 V3"
+icon = ":boom:"
+url_path = "task2V3"
 
 [[pages]]
 path = "pages/task3.py"

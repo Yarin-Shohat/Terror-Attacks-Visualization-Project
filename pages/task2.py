@@ -38,6 +38,19 @@ def get_data():
 
 df = get_data()
 
+# Add date range filter
+min_year = int(df['iyear'].min())
+max_year = int(df['iyear'].max())
+selected_years = st.slider(
+    'Select Year Range',
+    min_value=min_year,
+    max_value=max_year,
+    value=(min_year, max_year)
+)
+
+# Filter dataframe based on selected years
+df_filtered = df[(df['iyear'] >= selected_years[0]) & (df['iyear'] <= selected_years[1])]
+
 features = ['nperps', 'nkill', 'nwound']
 labels = {
     'nperps': 'Terorists Involved',
@@ -45,58 +58,93 @@ labels = {
     'nwound': 'Injuries'
 }
 
-# Create a 3x3 subplot figure
-fig = make_subplots(
-    rows=3, 
-    cols=3,
-    subplot_titles=[f"{labels[feat1]} vs {labels[feat2]}" 
-                   if i != j else f"{labels[feat1]} Distribution"
-                   for i, feat1 in enumerate(features)
-                   for j, feat2 in enumerate(features)]
-)
+try:
+    # Check if we have valid data
+    if df_filtered.empty or df_filtered[features].sum().sum() == 0:
+        raise ValueError("No valid data in selected range")
+        
+    # Create subplot figure with filtered data
+    fig = make_subplots(
+        rows=3, 
+        cols=3,
+        subplot_titles=[f"{labels[feat1]} vs {labels[feat2]} ({selected_years[0]}-{selected_years[1]})" 
+                       if i != j else f"{labels[feat1]} Distribution ({selected_years[0]}-{selected_years[1]})"
+                       for i, feat1 in enumerate(features)
+                       for j, feat2 in enumerate(features)]
+    )
 
+    # Add traces for each combination
+    for i, feat1 in enumerate(features):
+        for j, feat2 in enumerate(features):
+            # If on diagonal, create distribution plot
+            if i == j:
+                # Create distribution plot
+                hist_data = [df_filtered[feat1].dropna()]
+                group_labels = [labels[feat1]]
+                dist_fig = ff.create_distplot(hist_data, group_labels, show_rug=False)
+                
+                # Add distribution trace
+                fig.add_trace(
+                    go.Scatter(
+                        x=dist_fig.data[0].y,
+                        y=dist_fig.data[0].x,
+                        name=f'{labels[feat1]} Distribution',
+                        showlegend=False
+                    ),
+                    row=j+1, col=i+1
+                )
+            else:
+                # Add scatter plot
+                fig.add_trace(
+                    go.Scatter(
+                        x=df_filtered[feat1],
+                        y=df_filtered[feat2],
+                        mode='markers',
+                        name=f'{labels[feat1]} vs {labels[feat2]}',
+                        showlegend=False,
+                        hovertemplate=
+                        '<br>'.join([
+                            f'{labels[feat1]}: %{{x}}',
+                            f'{labels[feat2]}: %{{y}}',
+                            'Year: %{customdata[0]}',
+                            'City: %{customdata[1]}',
+                            'Location: %{customdata[2]}'
+                        ]) + '<extra></extra>',
+                        customdata=df_filtered[['iyear', 'city', 'location']].values
+                    ),
+                    row=j+1, col=i+1
+                )
 
-# Add traces for each combination
-for i, feat1 in enumerate(features):
-    for j, feat2 in enumerate(features):
-        # If on diagonal, create distribution plot
-        if i == j:
-            # Create distribution plot
-            hist_data = [df[feat1].dropna()]
-            group_labels = [labels[feat1]]
-            dist_fig = ff.create_distplot(hist_data, group_labels, show_rug=False)
-            
-            # Add distribution trace
+    corr_matrix = df_filtered[features].corr()
+
+except ValueError as e:
+    # Create empty subplot figure
+    fig = make_subplots(
+        rows=3, 
+        cols=3,
+        subplot_titles=[f"No data available for {labels[feat1]} vs {labels[feat2]}" 
+                       for i, feat1 in enumerate(features)
+                       for j, feat2 in enumerate(features)]
+    )
+    
+    # Add empty plots with "No data" message
+    for i, feat1 in enumerate(features):
+        for j, feat2 in enumerate(features):
             fig.add_trace(
                 go.Scatter(
-                    x=dist_fig.data[0].y,
-                    y=dist_fig.data[0].x,
-                    name=f'{labels[feat1]} Distribution',
-                    showlegend=False
-                ),
-                row=j+1, col=i+1
-            )
-        else:
-            # Add scatter plot
-            fig.add_trace(
-                go.Scatter(
-                    x=df[feat1],
-                    y=df[feat2],
-                    mode='markers',
-                    name=f'{labels[feat1]} vs {labels[feat2]}',
+                    x=[],
+                    y=[],
+                    name="No data",
                     showlegend=False,
-                    hovertemplate=
-                    '<br>'.join([
-                        f'{labels[feat1]}: %{{x}}',
-                        f'{labels[feat2]}: %{{y}}',
-                        'Year: %{customdata[0]}',
-                        'City: %{customdata[1]}',
-                        'Location: %{customdata[2]}'
-                    ]) + '<extra></extra>',
-                    customdata=df[['iyear', 'city', 'location']].values
                 ),
                 row=j+1, col=i+1
             )
+    
+    # Create empty correlation matrix
+    corr_matrix = pd.DataFrame(0, index=features, columns=features)
+    
+    # Show warning message
+    st.warning(f"No valid data found for the selected year range ({selected_years[0]}-{selected_years[1]})")
 
 # Update layout
 fig.update_layout(
@@ -115,9 +163,6 @@ for i, feat1 in enumerate(features):
 
 # Display plot
 st.plotly_chart(fig, use_container_width=True)
-
-# Calculate correlation matrix
-corr_matrix = df[['nperps', 'nkill', 'nwound']].corr()
 
 # Display correlation matrix
 st.write("### Correlation Matrix")
