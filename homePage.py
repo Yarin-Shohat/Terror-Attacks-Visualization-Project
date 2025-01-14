@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-from st_pages import add_page_title, get_nav_from_toml
 import plotly.express as px
 
 hide_streamlit_style = """
@@ -17,12 +16,10 @@ def get_data():
     """
     Read the Terror Attacks data from the CSV file and convert negative values to null
     """
-
     DATA_FILENAME = Path(__file__).parent/'data/IL_data.csv'
     data = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
     columns_names = ["iyear","imonth","iday","country","city","latitude","longitude","nperps","nkill","nwound",
         "location","success","attacktype1","suicide","targtype1","weaptype1_txt","gname","extended"]
-    
 
     data = data[columns_names]
 

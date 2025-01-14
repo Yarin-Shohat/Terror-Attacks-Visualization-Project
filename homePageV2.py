@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-from st_pages import add_page_title, get_nav_from_toml
 from ydata_profiling import ProfileReport
 from streamlit_ydata_profiling import st_profile_report
 

@@ -22,7 +22,6 @@ def get_data():
     """
     Read the Terror Attacks data from the CSV file.
     """
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
     DATA_FILENAME = Path(__file__).parent.parent / 'data/IL_data.csv'
     df = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
     columns_names = ["eventid","iyear","imonth","iday","country","city","latitude","longitude","nperps","nkill","nwound",
