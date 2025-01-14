@@ -15,21 +15,22 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 @st.cache_data
 def get_data():
     """
-    Read the Terror Attacks data from the CSV file and convert negative values to null
+    Read the Terror Attacks data from the CSV file.
     """
-
     DATA_FILENAME = Path(__file__).parent/'data/IL_data.csv'
     data = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
     columns_names = ["iyear","imonth","iday","country","city","latitude","longitude","nperps","nkill","nwound",
         "location","success","attacktype1","suicide","targtype1","weaptype1_txt","gname","extended"]
-    
 
     data = data[columns_names]
 
-    # Convert negative values to null in numeric columns
+    # Remove rows with negative values in numeric columns
     for column in columns_names:
         if pd.api.types.is_numeric_dtype(data[column]):
-            data.loc[data[column] < 0, column] = pd.NA
+            data = data[data[column] >= 0]
+
+    # Filter the dataset for the specified columns and drop rows with NaN values
+    # filtered_data = data.dropna()
 
     return data
 
@@ -187,6 +188,7 @@ def display_column_info(data):
             # Show sample values
             st.write("#### Sample Values")
             st.write(data[selected_column].sample(min(5, len(data))).to_list())
+
 
 df = get_data()
 

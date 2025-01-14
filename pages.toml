@@ -4,6 +4,16 @@ name = "Home Page"
 icon = "🏠"
 
 [[pages]]
+path = "homePageV1.py"
+name = "Home PageV1"
+icon = "🏠"
+
+[[pages]]
+path = "homePageV2.py"
+name = "Home PageV2"
+icon = "🏠"
+
+[[pages]]
 path = "pages/task1.py"
 name = "Task 1"
 icon = ":boom:"
