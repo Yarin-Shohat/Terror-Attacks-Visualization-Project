@@ -55,10 +55,10 @@ with col1:
         <div style="text-align: right; direction: rtl;font-size: large;">
         <b>מקרא:</b>
         <ul>
-            <li><span style="color: blue;">כחול</span> - 1 נפגע</li>
-            <li><span style="color: green;">ירוק</span> - 2 עד 10 נפגעים</li>
-            <li><span style="color: yellow;">צהוב</span> - 11 עד 100 נפגעים</li>
-            <li><span style="color: orange;">כתום</span> - יותר מ-100 נפגעים</li>
+            <li><span style="color: blue;">כחול</span> - אירוע 1</li>
+            <li><span style="color: green;">ירוק</span> - 2 עד 10 אירועים</li>
+            <li><span style="color: yellow;">צהוב</span> - 11 עד 100 אירועים</li>
+            <li><span style="color: orange;">כתום</span> - יותר מ-100 אירועים</li>
             <li><img src="data:image/png;base64,{image_base64}" style="width:20px; vertical-align:middle; margin-left:5px;"> - ערים מרכזיות בישראל שבהן התרחשו הכי הרבה אירועי טרור</li>
         </ul>
         </div>
