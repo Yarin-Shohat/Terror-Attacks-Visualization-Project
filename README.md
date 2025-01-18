@@ -44,7 +44,7 @@ This project aims to analyze and visualize terror attack patterns in Israel, foc
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/Terror-Attacks-Visualization-Project.git
+git clone https://github.com/Yarin-Shohat/Terror-Attacks-Visualization.git
 cd Terror-Attacks-Visualization-Project
 ```
 
@@ -109,24 +109,6 @@ The data is sourced from the Global Terrorism Database (GTD), focusing on incide
 - Casualty information
 - Weapon types
 - Temporal data
-
-## :hammer_and_wrench: Development
-
-To contribute to this project:
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## :page_facing_up: License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## :telephone_receiver: Contact
-
-For any queries regarding this project, please open an issue in the GitHub repository.
 
 ---
 
