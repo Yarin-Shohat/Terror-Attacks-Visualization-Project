@@ -58,11 +58,6 @@ def get_data():
     terror_data['full_date'] = pd.to_datetime(
         terror_data[['year', 'month', 'day']].assign(day=1)
     )
-    # Simplify weapon types
-    terror_data['weapon'] = terror_data['weapon'].replace(
-        'Vehicle (not to include vehicle-borne explosives, i.e., car or truck bombs)', 'Vehicle'
-    )
-
     return terror_data
 
 terror_data = get_data()
@@ -96,6 +91,9 @@ else:
     # Ensure year is padded with zeros for proper sorting
     terror_data['time_period'] = terror_data['year'].astype(str).str.zfill(4)
 
+# Debug print before filtering
+st.sidebar.write("Before filtering - Unique weapons:", terror_data['weapon'].unique())
+
 # Create time-series aggregation with weapon types
 time_weapon_data = (
     terror_data.groupby(['time_period', 'weapon'])
@@ -106,11 +104,6 @@ time_weapon_data = (
     })
     .reset_index()
 )
-
-# Filter weapons based on total incidents across all time periods
-weapon_counts = time_weapon_data.groupby('weapon')['id'].sum()
-weapons_to_include = weapon_counts[weapon_counts >= min_incidents].index
-time_weapon_data = time_weapon_data[time_weapon_data['weapon'].isin(weapons_to_include)]
 
 # Calculate cumulative totals for each weapon type
 time_weapon_data['cumulative_incidents'] = time_weapon_data.groupby('weapon')['id'].cumsum()
@@ -126,36 +119,9 @@ time_weapon_data = time_weapon_data.sort_values(['time_period', 'weapon'])
 
 # Debug print to verify data
 st.sidebar.write("Weapon types in visualization:", time_weapon_data['weapon'].nunique())
+st.sidebar.write("Unique weapons:", time_weapon_data['weapon'].unique())
 
-# Before creating the plot, ensure we have complete data for each time period
-time_periods = sorted(time_weapon_data['time_period'].unique())
-weapons = sorted(time_weapon_data['weapon'].unique())
-
-# Create a complete DataFrame with all combinations
-index = pd.MultiIndex.from_product([time_periods, weapons], names=['time_period', 'weapon'])
-complete_data = pd.DataFrame(index=index).reset_index()
-
-# Merge with existing data
-time_weapon_data = pd.merge(
-    complete_data,
-    time_weapon_data,
-    on=['time_period', 'weapon'],
-    how='left'
-).fillna(0)
-
-# Recalculate cumulative totals
-for weapon in weapons:
-    mask = time_weapon_data['weapon'] == weapon
-    time_weapon_data.loc[mask, 'cumulative_incidents'] = time_weapon_data.loc[mask, 'id'].cumsum()
-    time_weapon_data.loc[mask, 'cumulative_fatalities'] = time_weapon_data.loc[mask, 'fatalities'].cumsum()
-    time_weapon_data.loc[mask, 'cumulative_injuries'] = time_weapon_data.loc[mask, 'injuries'].cumsum()
-
-# Ensure minimum values for log scale
-time_weapon_data['cumulative_fatalities'] = time_weapon_data['cumulative_fatalities'].clip(lower=1)
-time_weapon_data['cumulative_injuries'] = time_weapon_data['cumulative_injuries'].clip(lower=1)
-
-# Create scatter plot with explicit category orders
-weapon_categories = sorted(time_weapon_data['weapon'].unique())
+# Create animated scatter plot
 fig = px.scatter(
     time_weapon_data,
     x='cumulative_injuries',
@@ -165,7 +131,6 @@ fig = px.scatter(
     size='cumulative_incidents',
     color='weapon',
     hover_name='weapon',
-    category_orders={'weapon': weapon_categories},  # Add this line
     log_x=True,
     log_y=True,
     size_max=60,

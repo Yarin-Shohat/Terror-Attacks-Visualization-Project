@@ -4,16 +4,6 @@ name = "Home Page"
 icon = "🏠"
 
 [[pages]]
-path = "homePageV1.py"
-name = "Home PageV1"
-icon = "🏠"
-
-[[pages]]
-path = "homePageV2.py"
-name = "Home PageV2"
-icon = "🏠"
-
-[[pages]]
 path = "pages/task1.py"
 name = "Task 1"
 icon = ":boom:"
@@ -32,17 +22,10 @@ icon = ":boom:"
 url_path = "task2V2"
 
 [[pages]]
-path = "pages/task2V3.py"
-name = "Task 2 V3"
-icon = ":boom:"
-url_path = "task2V3"
-
-[[pages]]
 path = "pages/task3.py"
 name = "Task 3"
 icon = ":boom:"
 url_path = "task3"
-
 
 [[pages]]
 path = "test.py"
