@@ -18,8 +18,7 @@ def get_data():
     """
     DATA_FILENAME = Path(__file__).parent/'data/IL_data.csv'
     data = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
-    columns_names = ["iyear","imonth","iday","country","city","latitude","longitude","nperps","nkill","nwound",
-        "location","success","attacktype1","suicide","targtype1","weaptype1_txt","gname","extended"]
+    columns_names = ["iyear","imonth","iday","city","latitude","longitude","nperps","nkill","nwound","weaptype1_txt"]
 
     data = data[columns_names]
 
@@ -64,7 +63,7 @@ st.markdown(
         <ol style="text-align: right; direction: rtl;">
             <li>תדירות התקיפות לפי אזורים: מהם האזורים בהם התרחשו המספר הגבוה ביותר של תקיפות טרור?</li>
             <li>קורלציה בין מספר המחבלים למספר הנפגעים: האם קיים קשר בין כמות המחבלים באירוע לכמות הנפגעים?</li>
-            <li>כמות פיגועי הטרור לאורך השנים: כיצד השתנתה תדירות הפיגועים לאורך השנים?</li>
+            <li>האם קיימת מגמה כללית של שימוש בסוגי הנשק שונים בפיגועי טרור בישראל? כיצד מגמות אלו השפיעו על תדירות הפיגועים ועל מספר הנפגעים וההרוגים?</li>
         </ol>
         ''',
         unsafe_allow_html=True
