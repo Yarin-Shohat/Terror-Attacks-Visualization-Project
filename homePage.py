@@ -30,6 +30,14 @@ def get_data():
 
     return data
 
+@st.cache_data
+def get_columns_desc():
+    """
+    Read the Terror Attacks data from the CSV file.
+    """
+    DATA_FILENAME = Path(__file__).parent/'data/column_desc.csv'
+    df = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
+    return df
 
 # Set the title that appears at the top of the page.
 st.markdown(
@@ -65,7 +73,6 @@ st.markdown(
 ''
 ''
 
-
 # Function to display column information
 def display_column_info(data):
     """
@@ -84,7 +91,7 @@ def display_column_info(data):
     
     # Create tabs for different views
     tab1, tab2 = st.tabs(["📊 Column Overview", "🔍 Detailed Analysis"])
-    
+    columns_decs = get_columns_desc()
     with tab1:
         # Create a summary table with color coding
         summary_data = []
@@ -112,7 +119,11 @@ def display_column_info(data):
                 "Missing Values (%)": f"{missing_percentage:.1f}%",
                 "Min": min_val,
                 "Max": max_val,
-                "Mean": mean_val
+                "Mean": mean_val,
+                # Add error handling for column description lookup
+                "Description": columns_decs[columns_decs.iloc[:, 0] == column].iloc[:, 1].values[0] 
+                              if not columns_decs[columns_decs.iloc[:, 0] == column].empty 
+                              else "N/A"
             })
         
         summary_df = pd.DataFrame(summary_data)

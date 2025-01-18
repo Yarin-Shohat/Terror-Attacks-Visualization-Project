@@ -1,0 +1,19 @@
+﻿column_name,description
+iyear,The year the event occurred
+imonth,The month the event occurred
+iday,The day the event occurred
+country,Country code
+city,The name of the city village or town where the event occurred
+latitude,Latitude
+longitude,Longitude
+nperps,The total number of terrorists participating in the event
+nkill,The total number of deaths in the event
+nwound,The number of wounded
+location,The country and city where the attack took place
+success,Whether the attack was successful
+attacktype1,The method or weapon used to carry out the attack
+suicide,Whether the attack was carried out by suicide
+targtype1,The type of target/victim
+weaptype1_txt,The type of weapon used in the event
+gname,The name of the group that carried out the attack
+extended,Whether the attack lasted less than 24 hours or more
