@@ -17,16 +17,6 @@ ICONS_PATH = Path(__file__).parent.parent / 'data/icons/location.png'
 
 # -----------------------------------------------------------------------------
 
-st.markdown(
-    '''
-    <div style="text-align: right; direction: rtl;font-size: large;">
-    בעמוד זה נענה על המטלה הבאה:
-    <br>
-    <b>התפלגות תקיפות הטרור לפי אזורים: כמות אירועי הטרור לפי מיקומים שונים בישראל</b>
-    </div>
-    ''',
-    unsafe_allow_html=True
-)
 
 @st.cache_data
 def get_data():
@@ -43,7 +33,18 @@ def get_data():
 
     return df
 
+st.markdown(
+    '''
+    <div style="text-align: right; direction: rtl;font-size: large;">
+    בעמוד זה נענה על המטלה הבאה:
+    <br>
+    <b>התפלגות תקיפות הטרור לפי אזורים: כמות אירועי הטרור לפי מיקומים שונים בישראל</b>
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
 
+st.markdown("<br>", unsafe_allow_html=True)
 col1, col2 = st.columns(2)
 
 with col1:
