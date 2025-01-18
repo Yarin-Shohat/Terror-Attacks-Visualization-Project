@@ -18,6 +18,55 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown(
+    '''
+    <div style="text-align: right; direction: rtl;">
+    <h3>ניתוח התפתחות הטרור לאורך זמן:</h3>
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
+
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown(
+        '''
+        <div style="text-align: right; direction: rtl;">
+        <p>
+        ניתן לשלוט בויזואליזציה באמצעות:
+        <ul>
+            <li>כפתורי הפעלה/עצירה</li>
+            <li>בחירת רמת הקיבוץ בזמן (חודשי/רבעוני/שנתי)</li>
+            <li>סף מינימלי למספר האירועים</li>
+        </ul>
+        </p>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+with col2:
+    st.markdown(
+        '''
+        <div style="text-align: right; direction: rtl;">
+        <p>
+        הויזואליזציה מציגה את התפתחות אירועי הטרור לאורך זמן, כאשר:
+        <ul>
+            <li>כל בועה מייצגת סוג נשק</li>
+            <li>גודל הבועה מייצג את מספר האירועים</li>
+            <li>מיקום הבועה מראה את היחס בין מספר ההרוגים והפצועים</li>
+            <li>הצבע מבדיל בין סוגי הנשק השונים</li>
+            <li>האנימציה מראה את השינוי לאורך זמן</li>
+        </ul>
+        </p>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+
 @st.cache_data
 def get_data():
     """
@@ -74,7 +123,22 @@ st.sidebar.header("Visualization Controls")
 time_group = st.sidebar.selectbox(
     "Time Grouping",
     ["Month", "Quarter", "Year"],
-    index=2
+    index=2,
+    label_visibility="visible",
+    key="time_group",
+    # Make container wider with custom CSS 
+    help="Select time aggregation level"
+)
+
+st.markdown(
+    """
+    <style>
+    div[data-testid="stSelectbox"] {
+        width: fit-content !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 # Minimum incidents threshold
@@ -297,29 +361,3 @@ current_stats = time_weapon_data.groupby('weapon').agg({
 }).sort_values('id', ascending=False).rename(columns={'id': 'incidents'})
 
 st.sidebar.dataframe(current_stats, use_container_width=True)
-
-# Add Hebrew explanation
-st.markdown(
-    '''
-    <div style="text-align: right; direction: rtl;">
-    <h3>ניתוח התפתחות הטרור לאורך זמן:</h3>
-    <p>
-    הויזואליזציה מציגה את התפתחות אירועי הטרור לאורך זמן, כאשר:
-    <ul>
-        <li>כל בועה מייצגת סוג נשק</li>
-        <li>גודל הבועה מייצג את מספר האירועים</li>
-        <li>מיקום הבועה מראה את היחס בין מספר ההרוגים והפצועים</li>
-        <li>הצבע מבדיל בין סוגי הנשק השונים</li>
-        <li>האנימציה מראה את השינוי לאורך זמן</li>
-    </ul>
-    ניתן לשלוט בויזואליזציה באמצעות:
-    <ul>
-        <li>כפתורי הפעלה/עצירה</li>
-        <li>בחירת רמת הקיבוץ בזמן (חודשי/רבעוני/שנתי)</li>
-        <li>סף מינימלי למספר האירועים</li>
-    </ul>
-    </p>
-    </div>
-    ''',
-    unsafe_allow_html=True
-)

@@ -20,6 +20,43 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown("<br>", unsafe_allow_html=True)
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown(
+        '''
+        <div style="text-align: right; direction: rtl;">
+        כל משבצת במטריצה מציגה את הקשר בין שני משתנים, כאשר:
+        
+        <ul><br>
+            <li>באלכסון - התפלגות המשתנה</li>
+            <li>מעל/מתחת לאלכסון - פיזור הנקודות בין שני המשתנים</li>
+        </ul>
+        </p>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+with col2:
+    st.markdown(
+        '''
+        <div style="text-align: right; direction: rtl;">
+        <p>
+        מטריצת הגרפים מציגה את כל הקשרים האפשריים בין המשתנים הבאים:
+        <ul>
+            <li>מספר המחבלים (Terorists Involved)</li>
+            <li>מספר ההרוגים (Live Loss)</li>
+            <li>מספר הפצועים (Injuries)</li>
+        </ul>
+        </p>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
 @st.cache_data
 def get_data():
     """
@@ -145,13 +182,15 @@ except ValueError as e:
     # Show warning message
     st.warning(f"No valid data found for the selected year range ({selected_years[0]}-{selected_years[1]})")
 
+
+
 # Update layout
 fig.update_layout(
     height=900,
     width=900,
     showlegend=False,
     title_text='Correlation Matrix with Distributions',
-    title_x=0.5,
+    title_x=0.39,
 )
 
 # Update axes labels
@@ -163,38 +202,18 @@ for i, feat1 in enumerate(features):
 # Display plot
 st.plotly_chart(fig, use_container_width=True)
 
-# Display correlation matrix and explanation side by side
-col1, col2 = st.columns(2)
+st.write("### Correlation Matrix")
+st.markdown(
+    '''
+    <div>
+    <ul>
+        <li>1: Perfect positive correlation</li>
+        <li>0: No correlation</li>
+        <li>-1: Perfect negative correlation</li>
+    </ul>
+    </div>
+''',
+unsafe_allow_html=True
+)
 
-with col1:
-    st.write("### Correlation Matrix")
-    st.dataframe(corr_matrix.style.format("{:.3f}"))
-
-with col2:
-    st.markdown(
-        '''
-        <div style="text-align: right; direction: rtl;">
-        <h3>ניתוח הקשר:</h3>
-        <p>
-        מטריצת הגרפים מציגה את כל הקשרים האפשריים בין המשתנים הבאים:
-        <ul>
-            <li>מספר המחבלים (Number of Perpetrators)</li>
-            <li>מספר ההרוגים (Number of Kills)</li>
-            <li>מספר הפצועים (Number of Wounded)</li>
-        </ul>
-        כל משבצת במטריצה מציגה את הקשר בין שני משתנים, כאשר:
-        <ul>
-            <li>באלכסון - התפלגות המשתנה</li>
-            <li>מעל/מתחת לאלכסון - פיזור הנקודות בין שני המשתנים</li>
-        </ul>
-        טבלת המתאמים מציגה את מקדמי המתאם בין כל זוג משתנים, כאשר:
-        <ul>
-            <li>1 מייצג קשר חיובי מושלם</li>
-            <li>0 מייצג העדר קשר</li>
-            <li>1- מייצג קשר שלילי מושלם</li>
-        </ul>
-        </p>
-        </div>
-        ''',
-        unsafe_allow_html=True
-    )
+st.dataframe(corr_matrix.style.format("{:.3f}"))
