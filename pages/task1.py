@@ -5,6 +5,15 @@ import folium
 from pathlib import Path
 import streamlit.components.v1 as components
 
+# Add this helper function at the top of your file
+def get_image_base64(image_path):
+    """Convert image to base64 string"""
+    import base64
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode('utf-8')
+
+# Get the absolute path to the icons directory
+ICONS_PATH = Path(__file__).parent.parent / 'data/icons/location.png'
 
 # -----------------------------------------------------------------------------
 
@@ -35,7 +44,43 @@ def get_data():
     return df
 
 
+col1, col2 = st.columns(2)
 
+with col1:
+    # Add a scale legend to the map
+    image_base64 = get_image_base64(ICONS_PATH)  # Get the base64 string first
+    st.markdown(
+        f'''
+        <div style="text-align: right; direction: rtl;font-size: large;">
+        <b>מקרא:</b>
+        <ul>
+            <li><span style="color: blue;">כחול</span> - 1 נפגע</li>
+            <li><span style="color: green;">ירוק</span> - 2 עד 10 נפגעים</li>
+            <li><span style="color: yellow;">צהוב</span> - 11 עד 100 נפגעים</li>
+            <li><span style="color: orange;">כתום</span> - יותר מ-100 נפגעים</li>
+            <li><img src="data:image/png;base64,{image_base64}" style="width:20px; vertical-align:middle; margin-left:5px;"> - ערים מרכזיות בישראל שבהן התרחשו הכי הרבה אירועי טרור</li>
+        </ul>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+with col2:
+    st.markdown(
+        f'''
+        <div style="text-align: right; direction: rtl;font-size: large;">
+        במפה זו ניתן לראות את התפלגות תקיפות הטרור לפי אזורים בישראל.
+        <br>
+        <b>הסבר על המפה:</b>
+        <ul>
+            <li>הנקודות הכחולות מייצגות את מיקומי תקיפות הטרור</li>
+            <li>צבע הנקודה והמספר שמופיע בנקודות מייצג את מספר אירועי הטרור באותו מיקום</li>
+            <li>לחיצה על נקודה תציג פרטים נוספים על האירוע, כולל שם העיר, מספר הנפגעים והמיקום המדויק</li>
+        </ul>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
 
 # Add loading spinner while generating the map
 with st.spinner('Loading map...'):
