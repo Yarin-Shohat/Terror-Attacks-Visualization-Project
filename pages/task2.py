@@ -202,8 +202,10 @@ for i, feat1 in enumerate(features):
 # Display plot
 st.plotly_chart(fig, use_container_width=True)
 
-st.write("### Correlation Matrix")
-st.markdown(
+# Create sidebar controls
+st.sidebar.header("Correlation Matrix")
+st.sidebar.dataframe(corr_matrix.style.format("{:.3f}"))
+st.sidebar.markdown(
     '''
     <div>
     <ul>
@@ -215,5 +217,3 @@ st.markdown(
 ''',
 unsafe_allow_html=True
 )
-
-st.dataframe(corr_matrix.style.format("{:.3f}"))
