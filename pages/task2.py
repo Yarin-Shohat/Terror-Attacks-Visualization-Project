@@ -163,36 +163,38 @@ for i, feat1 in enumerate(features):
 # Display plot
 st.plotly_chart(fig, use_container_width=True)
 
-# Display correlation matrix
-st.write("### Correlation Matrix")
-st.dataframe(corr_matrix.style.format("{:.3f}"))
+# Display correlation matrix and explanation side by side
+col1, col2 = st.columns(2)
 
-# Add explanation in Hebrew
-st.markdown(
-    '''
-    <div style="text-align: right; direction: rtl;">
-    <h3>ניתוח הקשר:</h3>
-    <p>
-    מטריצת הגרפים מציגה את כל הקשרים האפשריים בין המשתנים הבאים:
-    <ul>
-        <li>מספר המחבלים (Number of Perpetrators)</li>
-        <li>מספר ההרוגים (Number of Kills)</li>
-        <li>מספר הפצועים (Number of Wounded)</li>
-    </ul>
-    כל משבצת במטריצה מציגה את הקשר בין שני משתנים, כאשר:
-    <ul>
-        <li>באלכסון - התפלגות המשתנה</li>
-        <li>מעל/מתחת לאלכסון - פיזור הנקודות בין שני המשתנים</li>
-    </ul>
-    טבלת המתאמים מציגה את מקדמי המתאם בין כל זוג משתנים, כאשר:
-    <ul>
-        <li>1 מייצג קשר חיובי מושלם</li>
-        <li>0 מייצג העדר קשר</li>
-        <li>-1 מייצג קשר שלילי מושלם</li>
-    </ul>
-    </p>
-    </div>
-    ''',
-    unsafe_allow_html=True
-)
+with col1:
+    st.write("### Correlation Matrix")
+    st.dataframe(corr_matrix.style.format("{:.3f}"))
 
+with col2:
+    st.markdown(
+        '''
+        <div style="text-align: right; direction: rtl;">
+        <h3>ניתוח הקשר:</h3>
+        <p>
+        מטריצת הגרפים מציגה את כל הקשרים האפשריים בין המשתנים הבאים:
+        <ul>
+            <li>מספר המחבלים (Number of Perpetrators)</li>
+            <li>מספר ההרוגים (Number of Kills)</li>
+            <li>מספר הפצועים (Number of Wounded)</li>
+        </ul>
+        כל משבצת במטריצה מציגה את הקשר בין שני משתנים, כאשר:
+        <ul>
+            <li>באלכסון - התפלגות המשתנה</li>
+            <li>מעל/מתחת לאלכסון - פיזור הנקודות בין שני המשתנים</li>
+        </ul>
+        טבלת המתאמים מציגה את מקדמי המתאם בין כל זוג משתנים, כאשר:
+        <ul>
+            <li>1 מייצג קשר חיובי מושלם</li>
+            <li>0 מייצג העדר קשר</li>
+            <li>1- מייצג קשר שלילי מושלם</li>
+        </ul>
+        </p>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )

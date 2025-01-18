@@ -190,6 +190,3 @@ df = get_data()
 # Display the enhanced column information
 st.divider()
 display_column_info(df)
-
-st.write(df)
-

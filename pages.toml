@@ -16,37 +16,7 @@ icon = ":boom:"
 url_path = "task2"
 
 [[pages]]
-path = "pages/task2V2.py"
-name = "Task 2 V2"
-icon = ":boom:"
-url_path = "task2V2"
-
-[[pages]]
 path = "pages/task3.py"
 name = "Task 3"
 icon = ":boom:"
 url_path = "task3"
-
-[[pages]]
-path = "test.py"
-name = "test"
-icon = ":boom:"
-url_path = "test"
-
-[[pages]]
-path = "test1.py"
-name = "test1"
-icon = ":boom:"
-url_path = "test1"
-
-[[pages]]
-path = "test2.py"
-name = "test2"
-icon = ":boom:"
-url_path = "test2"
-
-[[pages]]
-path = "test3.py"
-name = "test3"
-icon = ":boom:"
-url_path = "test3"

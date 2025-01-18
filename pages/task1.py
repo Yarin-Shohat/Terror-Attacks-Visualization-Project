@@ -35,6 +35,8 @@ def get_data():
     return df
 
 
+
+
 # Add loading spinner while generating the map
 with st.spinner('Loading map...'):
     # Create progress bar

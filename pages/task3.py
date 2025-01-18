@@ -188,7 +188,7 @@ fig = px.scatter(
     }
 )
 
-# Update layout with proper log scale formatting
+# Update layout with proper log scale formatting and vertical lines
 fig.update_layout(
     height=700,
     showlegend=True,
@@ -199,8 +199,25 @@ fig.update_layout(
         xanchor="left",
         x=1.02,
         title="Weapon Types",
-        itemsizing='constant'  # Make legend items same size
+        itemsizing='constant'
     ),
+    # Add vertical lines
+    shapes=[
+        dict(
+            type='line',
+            x0=x,
+            x1=x,
+            y0=0.1,  # Same as your range_y[0]
+            y1=time_weapon_data['cumulative_fatalities'].max() * 3,  # Same as your range_y[1]
+            yref='y',
+            xref='x',
+            line=dict(
+                color='gray',
+                width=1
+            )
+        )
+        for x in [1, 10, 100, 1000, 10000]
+    ],
     xaxis=dict(
         type='log',
         tickmode='array',
@@ -218,7 +235,7 @@ fig.update_layout(
     updatemenus=[{
         'type': 'buttons',
         'showactive': False,
-        'x': 0.1,
+        'x': 0.05,
         'y': 1.1,
         'buttons': [{
             'label': '▶️ Play',
