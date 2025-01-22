@@ -38,7 +38,6 @@ def get_columns_desc():
     df = pd.read_csv(DATA_FILENAME, encoding='ISO-8859-1')
     return df
 
-# Set the title that appears at the top of the page.
 st.markdown(
     '''
     # :boom: Terror Attacks Visualization Project
@@ -68,7 +67,6 @@ st.markdown(
         ''',
         unsafe_allow_html=True
 )
-# Add some spacing
 ''
 ''
 

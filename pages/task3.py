@@ -243,7 +243,7 @@ fig = px.scatter(
         'time_period': 'Time Period'
     },
     title=f'Evolution of Terror Attacks by Weapon Type ({time_group}ly)',
-    hover_data={  # Add more hover information
+    hover_data={
         'weapon': True,
         'cumulative_incidents': True,
         'cumulative_fatalities': ':,.0f',
@@ -271,7 +271,7 @@ fig.update_layout(
             type='line',
             x0=x,
             x1=x,
-            y0=0.1,  # Same as your range_y[0]
+            y0=0.1,
             y1=time_weapon_data['cumulative_fatalities'].max() * 3,  # Same as your range_y[1]
             yref='y',
             xref='x',
