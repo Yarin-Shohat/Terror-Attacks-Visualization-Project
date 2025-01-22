@@ -143,7 +143,7 @@ with st.spinner('Loading map...'):
             popup=(
                 f"<b>City:</b> {row['city']}<br>"
                 f"<b>Casualties:</b> {row['nkill'] + row['nwound']}<br>"
-                f"<b>Location:</b> {row['location']}"
+                f"<b>Year:</b> {row['iyear']}"
             )
         ).add_to(marker_cluster)
     
