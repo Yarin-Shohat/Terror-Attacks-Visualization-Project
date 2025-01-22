@@ -144,9 +144,8 @@ try:
                             f'{labels[feat2]}: %{{y}}',
                             'Year: %{customdata[0]}',
                             'City: %{customdata[1]}',
-                            'Location: %{customdata[2]}'
                         ]) + '<extra></extra>',
-                        customdata=df_filtered[['iyear', 'city', 'location']].values
+                        customdata=df_filtered[['iyear', 'city']].values
                     ),
                     row=j+1, col=i+1
                 )

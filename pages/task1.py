@@ -153,7 +153,7 @@ with st.spinner('Loading map...'):
     for city in city_labels:
         folium.Marker(
             location=[city["lat"], city["lon"]],
-            icon=None,  # No icon, just text
+            icon=None,
             popup=city["name"],
             tooltip=city["name"]
         ).add_to(label_map)
