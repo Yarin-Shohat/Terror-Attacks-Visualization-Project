@@ -48,7 +48,7 @@ with col2:
         מטריצת הגרפים מציגה את כל הקשרים האפשריים בין המשתנים הבאים:
         <ul>
             <li>מספר המחבלים (Terorists Involved)</li>
-            <li>מספר ההרוגים (Live Loss)</li>
+            <li>מספר ההרוגים (Deaths)</li>
             <li>מספר הפצועים (Injuries)</li>
         </ul>
         </p>
@@ -56,6 +56,7 @@ with col2:
         ''',
         unsafe_allow_html=True
     )
+
 
 @st.cache_data
 def get_data():
@@ -100,7 +101,7 @@ df_filtered = df[(df['iyear'] >= selected_years[0]) & (df['iyear'] <= selected_y
 features = ['nperps', 'nkill', 'nwound']
 labels = {
     'nperps': 'Terorists Involved',
-    'nkill': 'Live Loss',
+    'nkill': 'Deaths',
     'nwound': 'Injuries'
 }
 
@@ -218,7 +219,7 @@ for i, feat1 in enumerate(features):
 # Display plot
 st.plotly_chart(fig, use_container_width=True)
 
-custom_names = ['Terrorists', 'Deaths', 'Injuries']  # You can change these names
+custom_names = ['Terrorists', 'Deaths', 'Injuries']
 corr_matrix.columns = custom_names
 corr_matrix.index = custom_names
 

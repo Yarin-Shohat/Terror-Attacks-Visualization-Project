@@ -93,6 +93,7 @@ def get_data():
             'nwound': 'injuries'
         }
     )
+
     # Fill missing values in 'fatalities' and 'injuries' with 0 and convert to integers
     terror_data['fatalities'] = terror_data['fatalities'].fillna(0).astype(int)
     terror_data['injuries'] = terror_data['injuries'].fillna(0).astype(int)
@@ -119,16 +120,28 @@ terror_data = get_data()
 # Create sidebar controls
 st.sidebar.header("Visualization Controls")
 
+# Create columns in sidebar
+time_col, scheme_col = st.sidebar.columns(2)
+
 # Time aggregation selector
-time_group = st.sidebar.selectbox(
-    "Time Grouping",
-    ["Month", "Quarter", "Year"],
-    index=2,
-    label_visibility="visible",
-    key="time_group",
-    # Make container wider with custom CSS 
-    help="Select time aggregation level"
-)
+with time_col:
+    time_group = st.selectbox(
+        "Time Grouping",
+        ["Month", "Quarter", "Year"],
+        index=2,
+        label_visibility="visible",
+        key="time_group",
+        help="Select time aggregation level"
+    )
+
+# Add color scheme selector 
+with scheme_col:
+    color_scheme = st.radio(
+        "Color Palette",
+        ["Custom", "Viridis"],
+        key="color_scheme"
+    )
+
 
 st.markdown(
     """
@@ -218,6 +231,31 @@ for weapon in weapons:
 time_weapon_data['cumulative_fatalities'] = time_weapon_data['cumulative_fatalities'].clip(lower=1)
 time_weapon_data['cumulative_injuries'] = time_weapon_data['cumulative_injuries'].clip(lower=1)
 
+time_weapon_data['bubble_size'] = (
+    time_weapon_data['cumulative_incidents'] + 10
+)
+
+# Set color scheme for weapon types
+weapon_colors = {
+    'Explosives': '#e31a1c',          # Red
+    'Firearms': '#1f78b4',            # Blue
+    'Melee': '#33a02c',              # Green
+    'Incendiary': '#ff7f00',         # Orange
+    'Vehicle': '#6a3d9a',            # Purple
+    'Unknown': '#666666',            # Gray
+    'Chemical': '#b15928',           # Brown
+    "Biological": '#20b2aa',         # Light Sea Green
+    'Other': '#a6cee3'               # Light Blue
+}
+
+# Define viridis color mapping
+viridis_colors = px.colors.sequential.Viridis
+weapon_categories = sorted(time_weapon_data['weapon'].unique())
+viridis_mapping = {
+    weapon: viridis_colors[i] 
+    for i, weapon in enumerate(weapon_categories)
+}
+
 # Create scatter plot with explicit category orders
 weapon_categories = sorted(time_weapon_data['weapon'].unique())
 fig = px.scatter(
@@ -226,29 +264,31 @@ fig = px.scatter(
     y='cumulative_fatalities',
     animation_frame='time_period',
     animation_group='weapon',
-    size='cumulative_incidents',
+    size='bubble_size',
     color='weapon',
+    color_discrete_map=viridis_mapping if color_scheme == "Viridis" else weapon_colors,
     hover_name='weapon',
     category_orders={'weapon': weapon_categories},  # Add this line
     log_x=True,
     log_y=True,
     size_max=60,
-    range_x=[0.1, time_weapon_data['cumulative_injuries'].max() * 3],
-    range_y=[0.1, time_weapon_data['cumulative_fatalities'].max() * 3],
+    range_x=[0.9, time_weapon_data['cumulative_injuries'].max() * 3],
+    range_y=[0.9, time_weapon_data['cumulative_fatalities'].max() * 3],
     labels={
-        'cumulative_injuries': 'Cumulative Number of Injuries (log scale)',
-        'cumulative_fatalities': 'Cumulative Number of Fatalities (log scale)',
+        'cumulative_injuries': 'Cumulative Number of Injuries',
+        'cumulative_fatalities': 'Cumulative Number of Deaths',
         'cumulative_incidents': 'Cumulative Number of Incidents',
         'weapon': 'Weapon Type',
         'time_period': 'Time Period'
     },
     title=f'Evolution of Terror Attacks by Weapon Type ({time_group}ly)',
     hover_data={
-        'weapon': True,
+        'weapon': False,
         'cumulative_incidents': True,
         'cumulative_fatalities': ':,.0f',
         'cumulative_injuries': ':,.0f',
-        'time_period': True
+        'time_period': True,
+        'bubble_size': False
     }
 )
 
@@ -272,7 +312,7 @@ fig.update_layout(
             x0=x,
             x1=x,
             y0=0.1,
-            y1=time_weapon_data['cumulative_fatalities'].max() * 3,  # Same as your range_y[1]
+            y1=time_weapon_data['cumulative_fatalities'].max() * 3,
             yref='y',
             xref='x',
             line=dict(
@@ -294,8 +334,9 @@ fig.update_layout(
         tickmode='array',
         ticktext=[1, 10, 100, 1000, 10000],
         tickvals=[1, 10, 100, 1000, 10000],
-        title_text='Cumulative Number of Fatalities (log scale)'
+        title_text='Cumulative Number of Deaths (log scale)'
     ),
+
     updatemenus=[{
         'type': 'buttons',
         'showactive': False,
@@ -358,6 +399,6 @@ current_stats = time_weapon_data.groupby('weapon').agg({
     'id': 'sum',
     'fatalities': 'sum',
     'injuries': 'sum'
-}).sort_values('id', ascending=False).rename(columns={'id': 'incidents'})
+}).sort_values('id', ascending=False).rename(columns={'id': 'Incidents', "fatalities": "Deaths", "injuries": "Injuries"})
 
 st.sidebar.dataframe(current_stats, use_container_width=True)
