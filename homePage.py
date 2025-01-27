@@ -110,14 +110,13 @@ def display_column_info(data):
                 min_val = max_val = mean_val = "N/A"
             
             summary_data.append({
-                "Column": column,
+                "Column": columns_decs[columns_decs.iloc[:, 0] == column].iloc[:, 2].values[0],
                 "Type": str(col_type),
                 "Unique Values": unique_count,
                 "Missing Values (%)": f"{missing_percentage:.1f}%",
                 "Min": min_val,
                 "Max": max_val,
                 "Mean": mean_val,
-                # Add error handling for column description lookup
                 "Description": columns_decs[columns_decs.iloc[:, 0] == column].iloc[:, 1].values[0] 
                               if not columns_decs[columns_decs.iloc[:, 0] == column].empty 
                               else "N/A"
