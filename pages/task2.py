@@ -74,6 +74,16 @@ def get_data():
 
 df = get_data()
 
+# Add color mapping at the start of the script
+PAIR_COLORS = {
+    ('nperps', 'nperps'): '#1f77b4',     # Blue
+    ('nkill', 'nkill'): '#1f77b4',       # Blue
+    ('nwound', 'nwound'): '#1f77b4',     # Blue
+    ('nperps', 'nkill'): '#d62728',      # Red
+    ('nperps', 'nwound'): '#7851a9',     # Purple
+    ('nkill', 'nwound'): '#ff7f0e',      # Orange
+}
+
 # Add date range filter
 min_year = int(df['iyear'].min())
 max_year = int(df['iyear'].max())
@@ -106,7 +116,7 @@ try:
         subplot_titles=[f"{labels[feat1]} vs {labels[feat2]} ({selected_years[0]}-{selected_years[1]})" 
                        if i != j else f"{labels[feat1]} Distribution ({selected_years[0]}-{selected_years[1]})"
                        for i, feat1 in enumerate(features)
-                       for j, feat2 in enumerate(features)]
+                       for j, feat2 in enumerate(features)],
     )
 
     # Add traces for each combination
@@ -118,12 +128,12 @@ try:
                 hist_data = [df_filtered[feat1].dropna()]
                 group_labels = [labels[feat1]]
                 dist_fig = ff.create_distplot(hist_data, group_labels, show_rug=False)
-                
                 # Add distribution trace
                 fig.add_trace(
                     go.Histogram(
                         x=df_filtered[feat1],
                         name=f'{labels[feat1]} Distribution',
+                        marker_color=PAIR_COLORS[(feat1, feat1)],
                         showlegend=False,
                         hovertemplate=f'{labels[feat1]}: %{{x}}<br>Count: %{{y}}<extra></extra>',
                         nbinsx=30
@@ -137,6 +147,11 @@ try:
                         x=df_filtered[feat1],
                         y=df_filtered[feat2],
                         mode='markers',
+                        marker=dict(
+                            color=PAIR_COLORS.get((feat1, feat2)) or PAIR_COLORS.get((feat2, feat1)),
+                            size=5,
+                            opacity=0.6
+                        ),
                         name=f'{labels[feat1]} vs {labels[feat2]}',
                         showlegend=False,
                         hovertemplate=
@@ -193,11 +208,19 @@ fig.update_layout(
 # Update axes labels
 for i, feat1 in enumerate(features):
     for j, feat2 in enumerate(features):
-        fig.update_xaxes(title_text=labels[feat1], row=j+1, col=i+1)
-        fig.update_yaxes(title_text=labels[feat2], row=j+1, col=i+1)
+        if i == j:
+            # Distribution plots
+            fig.update_yaxes(title_text="Count", row=j+1, col=i+1)
+        else:
+            fig.update_xaxes(title_text=labels[feat1], row=j+1, col=i+1)
+            fig.update_yaxes(title_text=labels[feat2], row=j+1, col=i+1)
 
 # Display plot
 st.plotly_chart(fig, use_container_width=True)
+
+custom_names = ['Terrorists', 'Deaths', 'Injuries']  # You can change these names
+corr_matrix.columns = custom_names
+corr_matrix.index = custom_names
 
 # Create sidebar controls
 st.sidebar.header("Correlation Matrix")
