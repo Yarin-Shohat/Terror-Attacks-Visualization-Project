@@ -121,11 +121,12 @@ try:
                 
                 # Add distribution trace
                 fig.add_trace(
-                    go.Scatter(
-                        x=dist_fig.data[0].y,
-                        y=dist_fig.data[0].x,
+                    go.Histogram(
+                        x=df_filtered[feat1],
                         name=f'{labels[feat1]} Distribution',
-                        showlegend=False
+                        showlegend=False,
+                        hovertemplate=f'{labels[feat1]}: %{{x}}<br>Count: %{{y}}<extra></extra>',
+                        nbinsx=30
                     ),
                     row=j+1, col=i+1
                 )
@@ -151,7 +152,6 @@ try:
                 )
 
     corr_matrix = df_filtered[features].corr()
-
 except ValueError as e:
     # Create empty subplot figure
     fig = make_subplots(
@@ -180,8 +180,6 @@ except ValueError as e:
     
     # Show warning message
     st.warning(f"No valid data found for the selected year range ({selected_years[0]}-{selected_years[1]})")
-
-
 
 # Update layout
 fig.update_layout(
