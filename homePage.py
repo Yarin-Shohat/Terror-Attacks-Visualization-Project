@@ -27,6 +27,8 @@ def get_data():
         if pd.api.types.is_numeric_dtype(data[column]):
             data.loc[data[column] < 0, column] = pd.NA
 
+    # Change weapon type colors for vehicle-related attacks
+    data.loc[data['weaptype1_txt'] == 'Vehicle (not to include vehicle-borne explosives, i.e., car or truck bombs)', 'weaptype1_txt'] = 'Vehicle'
     return data
 
 @st.cache_data
@@ -134,21 +136,29 @@ def display_column_info(data):
     
     with tab2:
         # Column selector
+        # Get display names for all columns
+        display_names = {col: columns_decs[columns_decs.iloc[:, 0] == col].iloc[:, 2].values[0] for col in data.columns}
+        
         selected_column = st.selectbox(
             "Select Column for Detailed Analysis",
-            data.columns
+            options=data.columns,
+            format_func=lambda x: display_names[x]
         )
         
         col1, col2 = st.columns([2, 1])
         
         with col1:
+            # Get display name for the selected column
+            display_name = columns_decs[columns_decs.iloc[:, 0] == selected_column].iloc[:, 2].values[0]
+            
             # Visualization based on data type
             if pd.api.types.is_numeric_dtype(data[selected_column]):
                 fig = px.histogram(
                     data, 
                     x=selected_column,
-                    title=f"Distribution of {selected_column}",
-                    template="plotly_white"
+                    title=f"Distribution of {display_name}",
+                    template="plotly_white",
+                    labels={"x": display_name}
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:
@@ -157,12 +167,11 @@ def display_column_info(data):
                 fig = px.bar(
                     x=value_counts.index,
                     y=value_counts.values,
-                    title=f"Top 10 Values in {selected_column}",
-                    labels={"x": selected_column, "y": "Count"},
+                    title=f"Top 10 Values in {display_name}",
+                    labels={"x": display_name, "y": "Count"},
                     template="plotly_white"
                 )
                 st.plotly_chart(fig, use_container_width=True)
-        
         with col2:
             st.write("#### Column Statistics")
             
