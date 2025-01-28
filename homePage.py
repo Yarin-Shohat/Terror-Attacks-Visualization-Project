@@ -158,7 +158,7 @@ def display_column_info(data):
                     x=selected_column,
                     title=f"Distribution of {display_name}",
                     template="plotly_white",
-                    labels={"x": display_name}
+                    labels={selected_column: display_name, "count": "Frequency"}
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:
@@ -185,21 +185,27 @@ def display_column_info(data):
             
             # Add numeric statistics if applicable
             if pd.api.types.is_numeric_dtype(data[selected_column]):
-                stats_dict.update({
-                    "Mean": f"{data[selected_column].mean():,.2f}",
-                    "Median": f"{data[selected_column].median():,.2f}",
-                    "Std Dev": f"{data[selected_column].std():,.2f}",
-                    "Min": f"{data[selected_column].min():,.2f}",
-                    "Max": f"{data[selected_column].max():,.2f}"
-                })
+                if selected_column in ['latitude', 'longitude']:
+                    stats_dict.update({
+                        "Mean": f"{data[selected_column].mean():,.2f}",
+                        "Median": f"{data[selected_column].median():,.2f}",
+                        "Std Dev": f"{data[selected_column].std():,.2f}",
+                        "Min": f"{data[selected_column].min():,.2f}",
+                        "Max": f"{data[selected_column].max():,.2f}"
+                    })
+                else:
+                    stats_dict.update({
+                        "Mean": f"{data[selected_column].mean():,.2f}",
+                        "Median": int(data[selected_column].median()),
+                        "Std Dev": f"{data[selected_column].std():,.2f}",
+                        "Min": int(data[selected_column].min()),
+                        "Max": int(data[selected_column].max())
+                    })
             
             # Display statistics as metrics
             for stat, value in stats_dict.items():
                 st.metric(stat, value)
             
-            # Show sample values
-            st.write("#### Sample Values")
-            st.write(data[selected_column].sample(min(5, len(data))).to_list())
 
 df = get_data()
 
