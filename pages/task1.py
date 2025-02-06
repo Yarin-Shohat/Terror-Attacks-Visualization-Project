@@ -141,9 +141,11 @@ with st.spinner('Loading map...'):
             fill_color='blue',
             fill_opacity=0.7,
             popup=(
-                f"<b>City:</b> {row['city']}<br>"
-                f"<b>Casualties:</b> {row['nkill'] + row['nwound']}<br>"
-                f"<b>Year:</b> {row['iyear']}"
+            '<div style="font-size: 14px;">'  # Adjust the size (14px) as needed
+            f"<b>City:</b> {row['city']}<br>"
+            f"<b>Casualties:</b> {row['nkill'] + row['nwound']}<br>"
+            f"<b>Year:</b> {row['iyear']}"
+            '</div>'
             )
         ).add_to(marker_cluster)
     

@@ -268,7 +268,7 @@ fig = px.scatter(
     color='weapon',
     color_discrete_map=viridis_mapping if color_scheme == "Viridis" else weapon_colors,
     hover_name='weapon',
-    category_orders={'weapon': weapon_categories},  # Add this line
+    category_orders={'weapon': weapon_categories},
     log_x=True,
     log_y=True,
     size_max=60,
@@ -292,6 +292,23 @@ fig = px.scatter(
     }
 )
 
+# Update text sizes
+fig.update_traces(
+    hoverlabel=dict(font_size=15)
+)
+
+# Update title styling
+fig.update_layout(
+    title={
+        'text': f'Evolution of Terror Attacks by Weapon Type ({time_group}ly)',
+        'y':0.95,
+        'x':0.5,
+        'xanchor': 'center',
+        'yanchor': 'top',
+        'font': {'size': 24}
+    }
+)
+
 # Update layout with proper log scale formatting and vertical lines
 fig.update_layout(
     height=700,
@@ -303,7 +320,9 @@ fig.update_layout(
         xanchor="left",
         x=1.02,
         title="Weapon Types",
-        itemsizing='constant'
+        itemsizing='constant',
+        font=dict(size=14),
+        title_font=dict(size=16)
     ),
     # Add vertical lines
     shapes=[
@@ -327,15 +346,21 @@ fig.update_layout(
         tickmode='array',
         ticktext=[1, 10, 100, 1000, 10000],
         tickvals=[1, 10, 100, 1000, 10000],
-        title_text='Cumulative Number of Injuries (log scale)'
+        title_text='Cumulative Number of Injuries (log scale)',
+        title_font=dict(size=18),
+        tickfont=dict(size=14)
     ),
     yaxis=dict(
         type='log',
         tickmode='array',
         ticktext=[1, 10, 100, 1000, 10000],
         tickvals=[1, 10, 100, 1000, 10000],
-        title_text='Cumulative Number of Deaths (log scale)'
+        title_text='Cumulative Number of Deaths (log scale)',
+        title_font=dict(size=18),
+        tickfont=dict(size=14)
     ),
+    title_font=dict(size=20),
+    font=dict(size=14),
 
     updatemenus=[{
         'type': 'buttons',
@@ -346,7 +371,7 @@ fig.update_layout(
             'label': '▶️ Play',
             'method': 'animate',
             'args': [None, {
-                'frame': {'duration': 800, 'redraw': True},  # Adjusted duration
+                'frame': {'duration': 800, 'redraw': True},
                 'fromcurrent': True,
                 'transition': {'duration': 300},
                 'mode': 'immediate'
@@ -361,16 +386,20 @@ fig.update_layout(
         }]
     }],
     sliders=[{
-        'currentvalue': {'prefix': 'Time Period: '},
+        'currentvalue': {
+            'prefix': 'Time Period: ',
+            'font': {'size': 16}
+        },
+        'font': {'size': 14},
         'pad': {'t': 50},
-        'len': 0.9,  # Make slider wider
-        'x': 0.1,    # Adjust position
+        'len': 0.9,
+        'x': 0.1,
         'xanchor': 'left',
         'y': 0,      
         'yanchor': 'top',
         'transition': {'duration': 300}
     }],
-    margin=dict(r=150)  # Add right margin for legend
+    margin=dict(r=150)
 )
 
 # Add annotations for each frame
@@ -386,7 +415,8 @@ for frame in fig.frames:
             'y': 0.95,
             'showarrow': False,
             'xref': 'paper',
-            'yref': 'paper'
+            'yref': 'paper',
+            'font': {'size': 20}
         }]
     ))
 

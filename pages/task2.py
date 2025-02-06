@@ -117,8 +117,9 @@ try:
         subplot_titles=[f"{labels[feat1]} vs {labels[feat2]} ({selected_years[0]}-{selected_years[1]})" 
                        if i != j else f"{labels[feat1]} Distribution ({selected_years[0]}-{selected_years[1]})"
                        for i, feat1 in enumerate(features)
-                       for j, feat2 in enumerate(features)],
+                       for j, feat2 in enumerate(features)]
     )
+    fig.update_annotations(font_size=16)  # Set the font size for subplot titles
 
     # Add traces for each combination
     for i, feat1 in enumerate(features):
@@ -136,7 +137,9 @@ try:
                         name=f'{labels[feat1]} Distribution',
                         marker_color=PAIR_COLORS[(feat1, feat1)],
                         showlegend=False,
-                        hovertemplate=f'{labels[feat1]}: %{{x}}<br>Count: %{{y}}<extra></extra>',
+                        hovertemplate='<span style="font-size: 14px;">' +
+                                    f'{labels[feat1]}: %{{x}}<br>Count: %{{y}}' +
+                                    '</span><extra></extra>',
                         nbinsx=30
                     ),
                     row=j+1, col=i+1
@@ -156,12 +159,13 @@ try:
                         name=f'{labels[feat1]} vs {labels[feat2]}',
                         showlegend=False,
                         hovertemplate=
+                        '<span style="font-size: 14px;">' +
                         '<br>'.join([
                             f'{labels[feat1]}: %{{x}}',
                             f'{labels[feat2]}: %{{y}}',
                             'Year: %{customdata[0]}',
                             'City: %{customdata[1]}',
-                        ]) + '<extra></extra>',
+                        ]) + '</span><extra></extra>',
                         customdata=df_filtered[['iyear', 'city']].values
                     ),
                     row=j+1, col=i+1
@@ -173,7 +177,7 @@ except ValueError as e:
     fig = make_subplots(
         rows=3, 
         cols=3,
-        subplot_titles=[f"No data available for {labels[feat1]} vs {labels[feat2]}" 
+        subplot_titles=[f"No data available" 
                        for i, feat1 in enumerate(features)
                        for j, feat2 in enumerate(features)]
     )
@@ -202,8 +206,14 @@ fig.update_layout(
     height=900,
     width=900,
     showlegend=False,
-    title_text='Correlation Matrix with Distributions',
-    title_x=0.39,
+    title={
+        'text': 'Correlation Matrix with Distributions',
+        'font': {'size': 30},
+        'y': 0.95,
+        'x': 0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'
+    }
 )
 
 # Update axes labels
@@ -211,10 +221,11 @@ for i, feat1 in enumerate(features):
     for j, feat2 in enumerate(features):
         if i == j:
             # Distribution plots
-            fig.update_yaxes(title_text="Count", row=j+1, col=i+1)
+            fig.update_yaxes(title_text="Count", title_font=dict(size=16), row=j+1, col=i+1)
+            fig.update_xaxes(title_text=labels[feat1], title_font=dict(size=16), row=j+1, col=i+1)
         else:
-            fig.update_xaxes(title_text=labels[feat1], row=j+1, col=i+1)
-            fig.update_yaxes(title_text=labels[feat2], row=j+1, col=i+1)
+            fig.update_xaxes(title_text=labels[feat1], title_font=dict(size=16), row=j+1, col=i+1)
+            fig.update_yaxes(title_text=labels[feat2], title_font=dict(size=16), row=j+1, col=i+1)
 
 # Display plot
 st.plotly_chart(fig, use_container_width=True)
