@@ -29,6 +29,19 @@ def get_data():
 
     # Change weapon type colors for vehicle-related attacks
     data.loc[data['weaptype1_txt'] == 'Vehicle (not to include vehicle-borne explosives, i.e., car or truck bombs)', 'weaptype1_txt'] = 'Vehicle'
+    
+    # Change type of columns
+    cols_to_int = ['iyear', 'imonth', 'iday', 'nperps', 'nkill', 'nwound']
+    data[cols_to_int] = data[cols_to_int].fillna(0).astype(int)
+    data['weaptype1_txt'] = data['weaptype1_txt'].astype('category')
+    data['city'] = data['city'].astype('category')
+    data['latitude'] = data['latitude'].astype(float)
+    data['longitude'] = data['longitude'].astype(float)
+    data['weaptype1_txt'] = data['weaptype1_txt'].astype('category')
+
+    # Change Sederot to Sderot
+    data.loc[data['city'] == 'Sederot', 'city'] = 'Sderot'
+        
     return data
 
 @st.cache_data
@@ -158,7 +171,7 @@ def display_column_info(data):
                     x=selected_column,
                     title=f"Distribution of {display_name}",
                     template="plotly_white",
-                    labels={selected_column: display_name, "count": "Frequency"}
+                    labels={selected_column: display_name, "Count": "Frequency", "y": "Count"}
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:

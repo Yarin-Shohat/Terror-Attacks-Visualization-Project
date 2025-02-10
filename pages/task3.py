@@ -127,8 +127,8 @@ time_col, scheme_col = st.sidebar.columns(2)
 with time_col:
     time_group = st.selectbox(
         "Time Grouping",
-        ["Month", "Quarter", "Year"],
-        index=2,
+        ["Month", "Year"],
+        index=1,
         label_visibility="visible",
         key="time_group",
         help="Select time aggregation level"

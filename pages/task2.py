@@ -114,8 +114,8 @@ try:
     fig = make_subplots(
         rows=3, 
         cols=3,
-        subplot_titles=[f"{labels[feat1]} vs {labels[feat2]} ({selected_years[0]}-{selected_years[1]})" 
-                       if i != j else f"{labels[feat1]} Distribution ({selected_years[0]}-{selected_years[1]})"
+        subplot_titles=[f"{labels[feat1]} vs {labels[feat2]}" 
+                       if i != j else f"{labels[feat1]} Distribution"
                        for i, feat1 in enumerate(features)
                        for j, feat2 in enumerate(features)]
     )
@@ -207,7 +207,7 @@ fig.update_layout(
     width=900,
     showlegend=False,
     title={
-        'text': 'Correlation Matrix with Distributions',
+        'text': f'Correlation Matrix with Distributions {selected_years[0]}-{selected_years[1]}',
         'font': {'size': 30},
         'y': 0.95,
         'x': 0.5,
