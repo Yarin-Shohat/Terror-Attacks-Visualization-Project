@@ -1,6 +1,6 @@
 # :boom: Terror Attacks Visualization Project
 
-A comprehensive data visualization dashboard analyzing terror attacks in Israel using the Global Terrorism Database (GTD).
+A comprehensive data visualization dashboard analyzing terror attacks in Israel using the Global Terrorism Database.
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://terror-attacks-visualization-dashboard.streamlit.app/)
 
