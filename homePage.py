@@ -152,15 +152,16 @@ def display_column_info(data):
         # Get display names for all columns
         display_names = {col: columns_decs[columns_decs.iloc[:, 0] == col].iloc[:, 2].values[0] for col in data.columns}
         
-        selected_column = st.selectbox(
-            "Select Column for Detailed Analysis",
-            options=data.columns,
-            format_func=lambda x: display_names[x]
-        )
         
         col1, col2 = st.columns([2, 1])
         
         with col1:
+            selected_column = st.selectbox(
+                "Select Column for Detailed Analysis",
+                options=data.columns,
+                format_func=lambda x: display_names[x]
+            )
+
             # Get display name for the selected column
             display_name = columns_decs[columns_decs.iloc[:, 0] == selected_column].iloc[:, 2].values[0]
             
