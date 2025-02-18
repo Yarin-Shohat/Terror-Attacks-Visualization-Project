@@ -21,7 +21,7 @@ st.markdown(
 st.markdown(
     '''
     <div style="text-align: right; direction: rtl;">
-    <h3>ניתוח התפתחות הטרור לאורך זמן:</h3>
+    <h3>ניתוח התפתחות הטרור לאורך זמן(מצטבר):</h3>
     </div>
     ''',
     unsafe_allow_html=True
