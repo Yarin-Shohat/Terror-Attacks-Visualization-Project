@@ -38,7 +38,7 @@ st.markdown(
     <div style="text-align: right; direction: rtl;font-size: large;">
     בעמוד זה נענה על המטלה הבאה:
     <br>
-    <b>התפלגות תקיפות הטרור לפי אזורים: כמות אירועי הטרור לפי מיקומים שונים בישראל</b>
+    <b>האם ישנם אזורים בישראל עם ריכוז יוצא דופן של מתקפות טרור בהשוואה לאחרים?</b>
     </div>
     ''',
     unsafe_allow_html=True
@@ -133,6 +133,11 @@ with st.spinner('Loading map...'):
     
     # Add ALL points to the cluster
     for idx, row in data.iterrows():
+        # Calculate casualties with NaN handling
+        nkill = 0 if pd.isna(row['nkill']) else int(row['nkill'])
+        nwound = 0 if pd.isna(row['nwound']) else int(row['nwound'])
+        casualties = nkill + nwound
+        
         folium.CircleMarker(
             location=[row['latitude'], row['longitude']],
             radius=6,
@@ -141,9 +146,9 @@ with st.spinner('Loading map...'):
             fill_color='blue',
             fill_opacity=0.7,
             popup=(
-            '<div style="font-size: 14px;">'  # Adjust the size (14px) as needed
+            '<div style="font-size: 14px;">'
             f"<b>City:</b> {row['city']}<br>"
-            f"<b>Casualties:</b> {row['nkill'] + row['nwound']}<br>"
+            f"<b>Casualties:</b> {casualties}<br>"
             f"<b>Year:</b> {row['iyear']}"
             '</div>'
             )
