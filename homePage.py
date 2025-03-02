@@ -183,13 +183,22 @@ def display_column_info(data):
             else:
                 # For categorical data, show top 10 values
                 value_counts = data[selected_column].value_counts().head(10)
-                fig = px.bar(
-                    x=value_counts.index,
-                    y=value_counts.values,
-                    title=f"Top 10 Values in {display_name}",
-                    labels={"x": display_name, "y": "Count"},
-                    template="plotly_white"
-                )
+                if data[selected_column].nunique() < 10:
+                    fig = px.bar(
+                        x=value_counts.index,
+                        y=value_counts.values,
+                        title=f"Top {data[selected_column].nunique()} Values in {display_name}",
+                        labels={"x": display_name, "y": "Count"},
+                        template="plotly_white"
+                    )
+                else:
+                    fig = px.bar(
+                        x=value_counts.index,
+                        y=value_counts.values,
+                        title=f"Top 10 Values in {display_name}",
+                        labels={"x": display_name, "y": "Count"},
+                        template="plotly_white"
+                    )
                 st.plotly_chart(fig, use_container_width=True)
         with col2:
             st.write("#### Column Statistics")
