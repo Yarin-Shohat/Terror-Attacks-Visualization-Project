@@ -142,6 +142,8 @@ with scheme_col:
         key="color_scheme"
     )
 
+# Add log scale toggle
+use_log_scale = st.sidebar.checkbox("Use Log Scale", value=True, help="Toggle between linear and logarithmic scales")
 
 st.markdown(
     """
@@ -269,11 +271,11 @@ fig = px.scatter(
     color_discrete_map=viridis_mapping if color_scheme == "Viridis" else weapon_colors,
     hover_name='weapon',
     category_orders={'weapon': weapon_categories},
-    log_x=True,
-    log_y=True,
+    log_x=use_log_scale,
+    log_y=use_log_scale,
     size_max=60,
-    range_x=[0.9, time_weapon_data['cumulative_injuries'].max() * 3],
-    range_y=[0.9, time_weapon_data['cumulative_fatalities'].max() * 3],
+    range_x=[0.9 if use_log_scale else 0, time_weapon_data['cumulative_injuries'].max() * (3 if use_log_scale else 1.1)],
+    range_y=[0.9 if use_log_scale else 0, time_weapon_data['cumulative_fatalities'].max() * (3 if use_log_scale else 1.1)],
     labels={
         'cumulative_injuries': 'Cumulative Number of Injuries',
         'cumulative_fatalities': 'Cumulative Number of Deaths',
@@ -309,7 +311,7 @@ fig.update_layout(
     }
 )
 
-# Update layout with proper log scale formatting and vertical lines
+# Update layout with proper scale formatting and vertical lines
 fig.update_layout(
     height=700,
     showlegend=True,
@@ -340,22 +342,22 @@ fig.update_layout(
             )
         )
         for x in [1, 10, 100, 1000, 10000]
-    ],
+    ] if use_log_scale else [],
     xaxis=dict(
-        type='log',
-        tickmode='array',
-        ticktext=[1, 10, 100, 1000, 10000],
-        tickvals=[1, 10, 100, 1000, 10000],
-        title_text='Cumulative Number of Injuries (log scale)',
+        type='log' if use_log_scale else 'linear',
+        tickmode='array' if use_log_scale else 'auto',
+        ticktext=[1, 10, 100, 1000, 10000] if use_log_scale else None,
+        tickvals=[1, 10, 100, 1000, 10000] if use_log_scale else None,
+        title_text=f'Cumulative Number of Injuries ({("log" if use_log_scale else "linear")} scale)',
         title_font=dict(size=18),
         tickfont=dict(size=14)
     ),
     yaxis=dict(
-        type='log',
-        tickmode='array',
-        ticktext=[1, 10, 100, 1000, 10000],
-        tickvals=[1, 10, 100, 1000, 10000],
-        title_text='Cumulative Number of Deaths (log scale)',
+        type='log' if use_log_scale else 'linear',
+        tickmode='array' if use_log_scale else 'auto',
+        ticktext=[1, 10, 100, 1000, 10000] if use_log_scale else None,
+        tickvals=[1, 10, 100, 1000, 10000] if use_log_scale else None,
+        title_text=f'Cumulative Number of Deaths ({("log" if use_log_scale else "linear")} scale)',
         title_font=dict(size=18),
         tickfont=dict(size=14)
     ),
