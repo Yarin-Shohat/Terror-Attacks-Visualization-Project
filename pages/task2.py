@@ -5,6 +5,8 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from plotly.subplots import make_subplots
 from pathlib import Path
+import numpy as np
+from scipy import stats
 
 
 # -----------------------------------------------------------------------------
@@ -80,13 +82,13 @@ PAIR_COLORS = {
     ('nperps', 'nperps'): '#1f77b4',     # Blue
     ('nkill', 'nkill'): '#1f77b4',       # Blue
     ('nwound', 'nwound'): '#1f77b4',     # Blue
-    ('nperps', 'nkill'): '#d62728',      # Red
+    ('nperps', 'nkill'): '#2ca02c',      # Green
     ('nperps', 'nwound'): '#7851a9',     # Purple
     ('nkill', 'nwound'): '#ff7f0e',      # Orange
 }
 
 # Add date range filter
-min_year = int(df['iyear'].min())
+min_year = 1971
 max_year = int(df['iyear'].max())
 selected_years = st.slider(
     'Select Year Range',
@@ -145,7 +147,17 @@ try:
                     row=j+1, col=i+1
                 )
             else:
-                # Add scatter plot
+                # Calculate trend line
+                slope, intercept, r_value, _, _ = stats.linregress(df_filtered[feat1], df_filtered[feat2])
+                
+                # Create extended range for trend line
+                x_min = df_filtered[feat1].min()
+                x_max = df_filtered[feat1].max()
+                x_range = x_max - x_min
+                x_trend = np.array([x_min - x_range * 0.1, x_max + x_range * 0.1])
+                y_trend = slope * x_trend + intercept
+
+                # Add scatter plot first
                 fig.add_trace(
                     go.Scatter(
                         x=df_filtered[feat1],
@@ -164,9 +176,26 @@ try:
                             f'{labels[feat1]}: %{{x}}',
                             f'{labels[feat2]}: %{{y}}',
                             'Year: %{customdata[0]}',
-                            'City: %{customdata[1]}',
+                            'City: %{customdata[1]}'
                         ]) + '</span><extra></extra>',
                         customdata=df_filtered[['iyear', 'city']].values
+                    ),
+                    row=j+1, col=i+1
+                )
+
+                # Add trend line without hover and with solid line
+                fig.add_trace(
+                    go.Scatter(
+                        x=x_trend,
+                        y=y_trend,
+                        mode='lines',
+                        line=dict(
+                            color='rgba(255, 0, 0, 0.8)',
+                            width=2
+                        ),
+                        name=f'Trend',
+                        showlegend=False,
+                        hoverinfo='skip'
                     ),
                     row=j+1, col=i+1
                 )
