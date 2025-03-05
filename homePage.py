@@ -142,7 +142,7 @@ def display_column_info(data):
                               else "N/A"
             })
         
-        summary_df = pd.DataFrame(summary_data)
+        summary_df = pd.DataFrame(summary_data, index=range(1, len(summary_data) + 1))
         st.dataframe(
             summary_df.style.background_gradient(
                 subset=['Unique Values'], 
