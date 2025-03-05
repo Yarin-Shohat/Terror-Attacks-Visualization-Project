@@ -338,8 +338,7 @@ fig.update_layout(
             xref='x',
             line=dict(
                 color='gray',
-                width=1,
-                dash='dot'
+                width=1
             )
         )
         for x in ([1, 10, 100, 1000, 10000] if use_log_scale else 
