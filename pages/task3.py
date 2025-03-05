@@ -351,7 +351,10 @@ fig.update_layout(
         tickvals=[1, 10, 100, 1000, 10000] if use_log_scale else None,
         title_text=f'Cumulative Number of Injuries ({("log" if use_log_scale else "linear")} scale)',
         title_font=dict(size=18),
-        tickfont=dict(size=14)
+        tickfont=dict(size=14),
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128, 128, 128, 0.2)',
     ),
     yaxis=dict(
         type='log' if use_log_scale else 'linear',

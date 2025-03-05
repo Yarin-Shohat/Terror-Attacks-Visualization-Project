@@ -245,15 +245,31 @@ fig.update_layout(
     }
 )
 
-# Update axes labels
+# Update axes labels and add grid lines
 for i, feat1 in enumerate(features):
     for j, feat2 in enumerate(features):
         if i == j:
             # Distribution plots
             fig.update_yaxes(title_text="Count", title_font=dict(size=16), row=j+1, col=i+1)
-            fig.update_xaxes(title_text=labels[feat1], title_font=dict(size=16), row=j+1, col=i+1)
+            fig.update_xaxes(
+                title_text=labels[feat1], 
+                title_font=dict(size=16), 
+                row=j+1, 
+                col=i+1,
+                showgrid=True,
+                gridwidth=1,
+                gridcolor='rgba(128, 128, 128, 0.2)',
+            )
         else:
-            fig.update_xaxes(title_text=labels[feat1], title_font=dict(size=16), row=j+1, col=i+1)
+            fig.update_xaxes(
+                title_text=labels[feat1], 
+                title_font=dict(size=16), 
+                row=j+1, 
+                col=i+1,
+                showgrid=True,
+                gridwidth=1,
+                gridcolor='rgba(128, 128, 128, 0.2)',
+            )
             fig.update_yaxes(title_text=labels[feat2], title_font=dict(size=16), row=j+1, col=i+1)
 
 # Display plot
