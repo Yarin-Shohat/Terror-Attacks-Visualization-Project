@@ -326,23 +326,25 @@ fig.update_layout(
         font=dict(size=14),
         title_font=dict(size=16)
     ),
-    # Add vertical lines
+    # Add vertical lines for both log and linear scales
     shapes=[
         dict(
             type='line',
             x0=x,
             x1=x,
-            y0=0.1,
-            y1=time_weapon_data['cumulative_fatalities'].max() * 3,
+            y0=0,
+            y1=time_weapon_data['cumulative_fatalities'].max() * (3 if use_log_scale else 1.1),
             yref='y',
             xref='x',
             line=dict(
                 color='gray',
-                width=1
+                width=1,
+                dash='dot'
             )
         )
-        for x in [1, 10, 100, 1000, 10000]
-    ] if use_log_scale else [],
+        for x in ([1, 10, 100, 1000, 10000] if use_log_scale else 
+                    range(1000, 8000, 1000))
+    ],
     xaxis=dict(
         type='log' if use_log_scale else 'linear',
         tickmode='array' if use_log_scale else 'auto',
