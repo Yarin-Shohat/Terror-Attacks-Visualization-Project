@@ -12,7 +12,7 @@ st.markdown(
     <div style="text-align: right; direction: rtl;font-size: large;">
     בעמוד זה נענה על המטלה הבאה:
     <br>
-    <b>מהם ההבדלים בין סוגי הנשק בתרומתם לחומרת האירועים(מספר נפגעים והרוגים) ותדירות האירועים מכל סוג נשק?</b>
+    <b>מהם ההבדלים בין סוגי הנשק בתרומתם לחומרת האירועים (מספר נפגעים והרוגים) ותדירות האירועים מכל סוג נשק?</b>
     </div>
     ''',
     unsafe_allow_html=True
@@ -21,7 +21,7 @@ st.markdown(
 st.markdown(
     '''
     <div style="text-align: right; direction: rtl;">
-    <h3>ניתוח התפתחות הטרור לאורך זמן(מצטבר):</h3>
+    <h3>ניתוח התפתחות הטרור לאורך זמן (מצטבר):</h3>
     </div>
     ''',
     unsafe_allow_html=True

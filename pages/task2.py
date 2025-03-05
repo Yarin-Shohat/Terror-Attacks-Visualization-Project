@@ -82,7 +82,7 @@ PAIR_COLORS = {
     ('nperps', 'nperps'): '#1f77b4',     # Blue
     ('nkill', 'nkill'): '#1f77b4',       # Blue
     ('nwound', 'nwound'): '#1f77b4',     # Blue
-    ('nperps', 'nkill'): '#2ca02c',      # Green
+    ('nperps', 'nkill'): '#f9f871',      # Green
     ('nperps', 'nwound'): '#7851a9',     # Purple
     ('nkill', 'nwound'): '#ff7f0e',      # Orange
 }
